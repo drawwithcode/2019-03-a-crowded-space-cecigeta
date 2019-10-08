@@ -1,4 +1,4 @@
-function preload(){
+function preload() {
   // put preload code here
   img1 = loadImage("coppia1.png");
   img3 = loadImage("coppia2.png");
@@ -6,65 +6,208 @@ function preload(){
   img2 = loadImage("corri.png");
 }
 
-var img1;
-var img2;
+
 var coppiaPrima;
 var coppiaSeconda;
 var coppiaTerza;
 var tuttePrima = [];
-var tutte = 5;
 var player;
+
 
 function setup() {
 
-createCanvas(windowWidth, windowHeight);
-background(240);
- player = new Scappa (mouseX, mouseY);
+  createCanvas(windowWidth, windowHeight);
+  noCursor();
 
+  for (var i = 0; i < 30; i++) {
+    var coppiaPrima = new People(random() * width, random() * height);
+    tuttePrima.push(coppiaPrima);
+    var coppiaSeconda = new CoppiaSeconda(random() * width, random() * height);
+    tuttePrima.push(coppiaSeconda);
+    var coppiaTerza = new CoppiaTerza(random() * width, random() * height);
+    tuttePrima.push(coppiaTerza);
 
-  for(var i = 0; i < tutte; i++){
-  var coppiaPrima= new People(random() * width, random() * height);
-  tuttePrima.push(coppiaPrima); }
+  }
+
 
 }
 
 function draw() {
+  background('#737f75');
+
+  player = new Scappa(mouseX, mouseY);
+  player.display();
+  player.move();
 
 
-   player.display();
+  for (var i = 0; i < tuttePrima.length; i++) {
+    tuttePrima[i].display();
+    tuttePrima[i].move();
+  }
 
-  // iterate all the items in the list
-   for(var i = 0; i < tuttePrima.length; i++){
-   	//temporary variable
-   	var b = tuttePrima[i];
-   	b.display();
-   }
+  push();
+  textAlign(CENTER, CENTER);
+  fill("black");
+  textSize(25);
+  textWidth(BOLD);
+  text('get rid of all the happy couples', windowWidth / 2, windowHeight - 60);
+  text('and create your clones', windowWidth / 2, windowHeight - 30);
+  pop();
 
 
 }
 
-function People(_x,_y) {
-
-  this.x = _x;
-  this.y = _y;
-  img1.resize(60,70);
-
-  this.display = function() {
-  image(img1, this.x, this.y);
-  image(img3, this.x, this.y);
-  image(img4, this.x, this.y);  }
-
+function mousePressed() {
+  for (var i = 0; i < tuttePrima.length; i++) {
+    tuttePrima[i].clicked();
+  }
 }
+
 
 function Scappa(_x, _y) {
 
   this.x = _x;
   this.y = _y;
-  img2.resize(40,50);
+  img2.resize(40, 50);
+  this.speed = 2;
+  this.body = image;
 
+  var xInc = this.x;
+  var yInc = this.y;
+
+  this.move = function() {
+    this.x += xInc * this.speed;
+    this.y += yInc * this.speed;
+
+  }
   this.display = function() {
+
     image(img2, this.x, this.y);
 
+  }
+
+}
+
+function People(_x, _y) {
+
+  this.x = _x;
+  this.y = _y;
+  img1.resize(60, 70);
+  this.speed = 2;
+  this.size = 30;
+
+
+  this.display = function() {
+    image(img1, this.x, this.y);
+  }
+  var xIncrease = 1;
+  var yIncrease = 1;
+
+  this.move = function() {
+    this.x += xIncrease * this.speed;
+    this.y += yIncrease * this.speed;
+
+
+    if (this.y > windowHeight || this.y < 0) {
+      yIncrease = -yIncrease;
+    }
+  
+    if (this.x > windowWidth || this.x < 0) {
+      xIncrease = -xIncrease;
+    }
+  }
+
+
+  this.clicked = function() {
+    var d = dist(this.x, this.y, mouseX, mouseY);
+    if (d < this.size) {
+      this.display = function() {
+        image(img2, this.x, this.y);
+      }
+    }
+  }
+
+
+}
+
+function CoppiaSeconda(_x, _y) {
+  this.x = _x;
+  this.y = _y;
+  this.speed = 2;
+  this.size = 30;
+  img3.resize(60, 70);
+
+
+  this.display = function() {
+    image(img3, this.x, this.y);
+  }
+
+  var xIncrease = 1;
+  var yIncrease = 1;
+
+  this.move = function() {
+    this.x += xIncrease * this.speed;
+    this.y += yIncrease * this.speed;
+
+
+    if (this.y > windowHeight || this.y < 0) {
+      yIncrease = -yIncrease;
+    }
+
+    if (this.x > windowWidth || this.x < 0) {
+      xIncrease = -xIncrease;
+    }
+  }
+
+  this.clicked = function() {
+    var d = dist(this.x, this.y, mouseX, mouseY);
+    if (d < this.size) {
+      this.display = function() {
+        image(img2, this.x, this.y);
+      }
+    }
+  }
+
+
+}
+
+function CoppiaTerza(_x, _y) {
+  this.x = _x;
+  this.y = _y;
+  this.speed = 2;
+  this.size = 30;
+
+  img4.resize(60, 70);
+
+  this.display = function() {
+    image(img4, this.x, this.y);
+  }
+
+
+  this.clicked = function() {
+    var d = dist(this.x, this.y, mouseX, mouseY);
+    if (d < this.size) {
+      this.display = function() {
+        image(img2, this.x, this.y);
+      }
+    }
+  }
+
+  var xIncrease = 1;
+  var yIncrease = 1;
+
+  this.move = function() {
+    this.x += xIncrease * this.speed;
+    this.y += yIncrease * this.speed;
+
+
+    if (this.y > windowHeight || this.y < 0) {
+      yIncrease = -yIncrease;
+    }
+
+    if (this.x > windowWidth || this.x < 0) {
+      xIncrease = -xIncrease;
+    }
   }
 
 }
